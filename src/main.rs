@@ -66,17 +66,24 @@ fn main() {
 fn resolve_assertion_types(cli: &Cli) -> Vec<AssertionType> {
     let mut types = Vec::new();
 
-    if cli.prevent_display_sleep {
-        types.push(AssertionType::PreventIdleDisplaySleep);
-    }
-    if cli.prevent_idle_sleep {
-        types.push(AssertionType::PreventIdleSystemSleep);
-    }
-    if cli.prevent_system_sleep {
-        types.push(AssertionType::PreventSystemSleep);
-    }
+    // Windows'da birden fazla type için SetThreadExecutionState
+    // ayrı ayrı çağrılınca flag'ler overwrite oluyor.
+    // Bu yüzden display + system kullanılırsa, tek bir
+    // "PreventIdleDisplaySleep" type'ı olarak birleştir.
+    let has_display = cli.prevent_display_sleep;
+    let has_idle = cli.prevent_idle_sleep;
+    let has_system = cli.prevent_system_sleep;
 
-    if types.is_empty() {
+    if has_display {
+        // Display isteniyorsa, display + system + idle'ı birleştir
+        // (ES_DISPLAY_REQUIRED hepsini kapsar aslında)
+        types.push(AssertionType::PreventIdleDisplaySleep);
+    } else if has_system {
+        types.push(AssertionType::PreventSystemSleep);
+    } else if has_idle {
+        types.push(AssertionType::PreventIdleSystemSleep);
+    } else {
+        // Default: idle system sleep
         types.push(AssertionType::PreventIdleSystemSleep);
     }
 
