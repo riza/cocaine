@@ -7,7 +7,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-/// cocaine - Keep your Mac awake. Like caffeinate, but with more kick.
+/// cocaine - Keep your machine awake. Like caffeinate, but with more kick.
 #[derive(Parser, Debug)]
 #[command(name = "cocaine", version, about)]
 struct Cli {
@@ -87,7 +87,7 @@ fn create_assertions(types: &[AssertionType]) -> Vec<PowerAssertion> {
     let mut assertions = Vec::new();
 
     for &t in types {
-        match PowerAssertion::new(t, "cocaine: keeping your Mac awake") {
+        match PowerAssertion::new(t, "cocaine: keeping your machine awake") {
             Ok(a) => assertions.push(a),
             Err(e) => eprintln!("cocaine: warning: could not prevent {t}: {e}"),
         }
