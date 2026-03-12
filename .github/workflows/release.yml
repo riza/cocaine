@@ -113,14 +113,41 @@ jobs:
         run: |
           VERSION=${{ github.ref_name }}
           VERSION_NO_V="${VERSION#v}"
-          ASSET="cocaine-aarch64-apple-darwin.tar.gz"
-          ASSET_URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}/${ASSET}"
-          SHA_URL="${ASSET_URL}.sha256"
-          SHA256=$(curl -fsSL "$SHA_URL" | awk '{print $1}')
+          BASE_URL="https://github.com/${{ github.repository }}/releases/download/${VERSION}"
 
-          sed -i "s|url \".*\"|url \"${ASSET_URL}\"|" homebrew-tap/Formula/cocaine.rb
-          sed -i "s|sha256 \".*\"|sha256 \"${SHA256}\"|" homebrew-tap/Formula/cocaine.rb
-          sed -i "s/version \"[0-9.]*\"/version \"${VERSION_NO_V}\"/" homebrew-tap/Formula/cocaine.rb
+          ARM_URL="${BASE_URL}/cocaine-aarch64-apple-darwin.tar.gz"
+          X86_URL="${BASE_URL}/cocaine-x86_64-apple-darwin.tar.gz"
+
+          ARM_SHA256=$(curl -fsSL "${ARM_URL}.sha256" | awk '{print $1}')
+          X86_SHA256=$(curl -fsSL "${X86_URL}.sha256" | awk '{print $1}')
+
+          FORMULA="homebrew-tap/Formula/cocaine.rb"
+
+          {
+            echo 'class Cocaine < Formula'
+            echo '  desc "Keep your machine awake. Like caffeinate, but with more kick."'
+            echo '  homepage "https://github.com/riza/cocaine"'
+            echo "  version \"${VERSION_NO_V}\""
+            echo ''
+            echo '  on_macos do'
+            echo '    if Hardware::CPU.arm?'
+            echo "      url \"${ARM_URL}\""
+            echo "      sha256 \"${ARM_SHA256}\""
+            echo '    else'
+            echo "      url \"${X86_URL}\""
+            echo "      sha256 \"${X86_SHA256}\""
+            echo '    end'
+            echo '  end'
+            echo ''
+            echo '  def install'
+            echo '    bin.install "cocaine"'
+            echo '  end'
+            echo ''
+            echo '  test do'
+            echo '    assert_match version.to_s, shell_output("#{bin}/cocaine --version")'
+            echo '  end'
+            echo 'end'
+          } > "${FORMULA}"
 
       - name: Commit and push
         working-directory: homebrew-tap
