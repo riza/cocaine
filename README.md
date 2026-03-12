@@ -56,6 +56,26 @@ By default (no flags), cocaine prevents idle system sleep indefinitely until you
 | `-t` | `--timeout <SECS>` | Stop after N seconds (default: 0 = indefinite) |
 
 
+### Daemon mode
+
+cocaine can run as a background daemon, keeping your machine awake without occupying a terminal.
+
+```bash
+# Start the daemon (default: prevent idle sleep)
+cocaine daemon start
+
+# Start with display-on and a 2-hour timeout
+cocaine daemon start -d -t 7200
+
+# Check if the daemon is running
+cocaine daemon status
+
+# Stop the daemon
+cocaine daemon stop
+```
+
+The daemon writes a PID file to `~/.local/share/cocaine/cocaine.pid` (Linux/macOS) or `%APPDATA%\cocaine\cocaine.pid` (Windows).
+
 ### Examples
 
 ```bash
