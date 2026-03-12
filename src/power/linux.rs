@@ -1,6 +1,7 @@
 use super::AssertionType;
 use std::os::fd::OwnedFd;
 use zbus::blocking::Connection;
+use zbus::zvariant;
 
 fn inhibit_what(types: &[AssertionType]) -> String {
     let mut what = Vec::new();
@@ -43,7 +44,7 @@ impl LinuxInhibitor {
 fn call_inhibit(what: &str, reason: &str) -> Result<OwnedFd, String> {
     let conn = Connection::system().map_err(|e| format!("D-Bus connection failed: {e}"))?;
 
-    let reply: OwnedFd = conn
+    let reply: zvariant::OwnedFd = conn
         .call_method(
             Some("org.freedesktop.login1"),
             "/org/freedesktop/login1",
@@ -56,5 +57,5 @@ fn call_inhibit(what: &str, reason: &str) -> Result<OwnedFd, String> {
         .deserialize()
         .map_err(|e| format!("Failed to read inhibit fd: {e}"))?;
 
-    Ok(reply)
+    Ok(reply.into())
 }
