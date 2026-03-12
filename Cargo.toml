@@ -1,6 +1,6 @@
 [package]
 name = "cocaine"
-version = "0.2.0"
+version = "0.2.7"
 edition = "2024"
 authors = ["Riza Sabuncu"]
 description = "Keep your machine awake. Like caffeinate, but with more kick."
