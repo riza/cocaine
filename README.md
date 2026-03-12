@@ -6,19 +6,21 @@ A tiny Rust CLI that prevents your Mac from sleeping using macOS power assertion
 
 ## Install
 
-### From source
+### Homebrew
 
 ```bash
-git clone https://github.com/riza/cocaine.git
-cd cocaine
-cargo install --path .
+brew install riza/tap/cocaine
 ```
 
-### With cargo
+### From source
 
 ```bash
 cargo install --git https://github.com/riza/cocaine.git
 ```
+
+### From release
+
+Download the latest binary from [Releases](https://github.com/riza/cocaine/releases), extract, and put it in your `$PATH`.
 
 ## Usage
 
@@ -78,7 +80,17 @@ pmset -g assertions
 ## Requirements
 
 - macOS (uses IOKit framework)
-- Rust 2024 edition
+
+## Release
+
+Tag a version to trigger the release workflow:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+This builds universal macOS binaries (ARM + Intel), creates a GitHub release, and updates the Homebrew formula automatically.
 
 ## License
 
