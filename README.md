@@ -11,12 +11,6 @@
 
 ## Install
 
-### Homebrew (macOS)
-
-```bash
-brew install riza/tap/cocaine
-```
-
 ### From source
 
 ```bash
@@ -108,7 +102,7 @@ git tag v0.2.0
 git push origin v0.2.0
 ```
 
-This builds binaries for all platforms, creates a GitHub release, and updates the Homebrew formula automatically.
+This builds binaries for all platforms and creates a GitHub release.
 
 ## License
 
