@@ -1,13 +1,9 @@
-<p align="center">
-  <img src="assets/logo.png" width="200" alt="cocaine logo">
-</p>
 
-<h1 align="center">cocaine</h1>
 
-<p align="center">
-  Keep your machine awake. Like <code>caffeinate</code>, but with more kick.<br>
-  A tiny Rust CLI that prevents your computer from sleeping. Works on macOS, Linux and Windows.
-</p>
+# cocaine
+
+Keep your machine awake. Like `caffeinate`, but with more kick.  
+A tiny Rust CLI that prevents your computer from sleeping. Works on macOS, Linux and Windows.
 
 ## Install
 
@@ -21,13 +17,15 @@ cargo install --git https://github.com/riza/cocaine.git
 
 Download the latest binary for your platform from [Releases](https://github.com/riza/cocaine/releases), extract, and put it in your `$PATH`.
 
-| Platform | Binary |
-|----------|--------|
-| macOS (Apple Silicon) | `cocaine-aarch64-apple-darwin.tar.gz` |
-| macOS (Intel) | `cocaine-x86_64-apple-darwin.tar.gz` |
-| Linux (x86_64) | `cocaine-x86_64-unknown-linux-gnu.tar.gz` |
-| Linux (ARM64) | `cocaine-aarch64-unknown-linux-gnu.tar.gz` |
-| Windows (x86_64) | `cocaine-x86_64-pc-windows-msvc.zip` |
+
+| Platform              | Binary                                     |
+| --------------------- | ------------------------------------------ |
+| macOS (Apple Silicon) | `cocaine-aarch64-apple-darwin.tar.gz`      |
+| macOS (Intel)         | `cocaine-x86_64-apple-darwin.tar.gz`       |
+| Linux (x86_64)        | `cocaine-x86_64-unknown-linux-gnu.tar.gz`  |
+| Linux (ARM64)         | `cocaine-aarch64-unknown-linux-gnu.tar.gz` |
+| Windows (x86_64)      | `cocaine-x86_64-pc-windows-msvc.zip`       |
+
 
 ## Usage
 
@@ -39,12 +37,14 @@ By default (no flags), cocaine prevents idle system sleep indefinitely until you
 
 ### Options
 
-| Flag | Long | Description |
-|------|------|-------------|
-| `-d` | `--display` | Prevent the display from sleeping |
-| `-i` | `--idle` | Prevent the system from idle sleeping |
-| `-s` | `--system` | Prevent the system from sleeping entirely |
+
+| Flag | Long               | Description                                    |
+| ---- | ------------------ | ---------------------------------------------- |
+| `-d` | `--display`        | Prevent the display from sleeping              |
+| `-i` | `--idle`           | Prevent the system from idle sleeping          |
+| `-s` | `--system`         | Prevent the system from sleeping entirely      |
 | `-t` | `--timeout <SECS>` | Stop after N seconds (default: 0 = indefinite) |
+
 
 ### Examples
 
@@ -72,11 +72,13 @@ cocaine -s -- curl -O https://example.com/big-file.tar.gz
 
 cocaine uses native OS APIs on each platform to prevent sleep:
 
-| Platform | API | Mechanism |
-|----------|-----|-----------|
-| **macOS** | IOKit `IOPMAssertionCreateWithName` | Creates power assertions that are released on exit |
-| **Linux** | systemd-logind D-Bus `Inhibit` | Holds an inhibit file descriptor via `org.freedesktop.login1` |
-| **Windows** | `SetThreadExecutionState` | Sets `ES_SYSTEM_REQUIRED` / `ES_DISPLAY_REQUIRED` flags |
+
+| Platform    | API                                 | Mechanism                                                     |
+| ----------- | ----------------------------------- | ------------------------------------------------------------- |
+| **macOS**   | IOKit `IOPMAssertionCreateWithName` | Creates power assertions that are released on exit            |
+| **Linux**   | systemd-logind D-Bus `Inhibit`      | Holds an inhibit file descriptor via `org.freedesktop.login1` |
+| **Windows** | `SetThreadExecutionState`           | Sets `ES_SYSTEM_REQUIRED` / `ES_DISPLAY_REQUIRED` flags       |
+
 
 Assertions / inhibitors are automatically released when cocaine exits -- whether that's through Ctrl+C, a timeout, or a child command finishing.
 
@@ -92,17 +94,6 @@ systemd-inhibit --list
 # Windows (PowerShell)
 powercfg /requests
 ```
-
-## Release
-
-Tag a version to trigger the release workflow:
-
-```bash
-git tag v0.2.0
-git push origin v0.2.0
-```
-
-This builds binaries for all platforms and creates a GitHub release.
 
 ## License
 
