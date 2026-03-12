@@ -11,6 +11,12 @@
 
 ## Install
 
+### Homebrew (macOS/Linux)
+
+```bash
+brew install riza/tap/cocaine
+```
+
 ### From source
 
 ```bash
