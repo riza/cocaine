@@ -9,7 +9,31 @@ permissions:
   contents: write
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.bump.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Bump Cargo.toml version
+        id: bump
+        run: |
+          VERSION=${{ github.ref_name }}
+          VERSION_NO_V="${VERSION#v}"
+          sed -i "s/^version = \"[0-9.]*\"/version = \"${VERSION_NO_V}\"/" Cargo.toml
+          cargo update --workspace
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add Cargo.toml Cargo.lock
+          git diff --staged --quiet || git commit -m "chore: bump version to ${VERSION_NO_V}"
+          git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: prepare
     strategy:
       matrix:
         include:
@@ -32,6 +56,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
