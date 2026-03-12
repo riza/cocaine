@@ -9,6 +9,11 @@
   A tiny Rust CLI that prevents your computer from sleeping. Works on macOS, Linux and Windows.
 </p>
 
+<p align="center">
+  <a href="https://github.com/riza/cocaine/actions/workflows/release.yml"><img src="https://github.com/riza/cocaine/actions/workflows/release.yml/badge.svg" alt="Release"></a>
+  <a href="https://rust-reportcard.xuri.me/report/github.com/riza/cocaine"><img src="https://rust-reportcard.xuri.me/badge/github.com/riza/cocaine" alt="Rust Report Card"></a>
+</p>
+
 ## Install
 
 ### Homebrew (macOS/Linux)
