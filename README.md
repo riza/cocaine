@@ -1,12 +1,17 @@
-# cocaine
+<p align="center">
+  <img src="assets/logo.png" width="200" alt="cocaine logo">
+</p>
 
-Keep your Mac awake. Like `caffeinate`, but with more kick.
+<h1 align="center">cocaine</h1>
 
-A tiny Rust CLI that prevents your Mac from sleeping using macOS power assertions (`IOPMAssertion`). No dependencies beyond the system frameworks.
+<p align="center">
+  Keep your machine awake. Like <code>caffeinate</code>, but with more kick.<br>
+  A tiny Rust CLI that prevents your computer from sleeping. Works on macOS, Linux and Windows.
+</p>
 
 ## Install
 
-### Homebrew
+### Homebrew (macOS)
 
 ```bash
 brew install riza/tap/cocaine
@@ -20,7 +25,15 @@ cargo install --git https://github.com/riza/cocaine.git
 
 ### From release
 
-Download the latest binary from [Releases](https://github.com/riza/cocaine/releases), extract, and put it in your `$PATH`.
+Download the latest binary for your platform from [Releases](https://github.com/riza/cocaine/releases), extract, and put it in your `$PATH`.
+
+| Platform | Binary |
+|----------|--------|
+| macOS (Apple Silicon) | `cocaine-aarch64-apple-darwin.tar.gz` |
+| macOS (Intel) | `cocaine-x86_64-apple-darwin.tar.gz` |
+| Linux (x86_64) | `cocaine-x86_64-unknown-linux-gnu.tar.gz` |
+| Linux (ARM64) | `cocaine-aarch64-unknown-linux-gnu.tar.gz` |
+| Windows (x86_64) | `cocaine-x86_64-pc-windows-msvc.zip` |
 
 ## Usage
 
@@ -61,36 +74,41 @@ cocaine -d -- make build
 cocaine -s -- curl -O https://example.com/big-file.tar.gz
 ```
 
-### How it works
+## How it works
 
-cocaine creates macOS `IOPMAssertion`s through the IOKit framework:
+cocaine uses native OS APIs on each platform to prevent sleep:
 
-- `-d` creates a `PreventUserIdleDisplaySleep` assertion
-- `-i` creates a `PreventUserIdleSystemSleep` assertion (default when no flags given)
-- `-s` creates a `PreventSystemSleep` assertion
+| Platform | API | Mechanism |
+|----------|-----|-----------|
+| **macOS** | IOKit `IOPMAssertionCreateWithName` | Creates power assertions that are released on exit |
+| **Linux** | systemd-logind D-Bus `Inhibit` | Holds an inhibit file descriptor via `org.freedesktop.login1` |
+| **Windows** | `SetThreadExecutionState` | Sets `ES_SYSTEM_REQUIRED` / `ES_DISPLAY_REQUIRED` flags |
 
-Assertions are automatically released when cocaine exits (via `Drop`), whether that's through Ctrl+C, a timeout, or a child command finishing.
+Assertions / inhibitors are automatically released when cocaine exits -- whether that's through Ctrl+C, a timeout, or a child command finishing.
 
-You can verify active assertions with:
+### Verifying
 
 ```bash
+# macOS
 pmset -g assertions
+
+# Linux
+systemd-inhibit --list
+
+# Windows (PowerShell)
+powercfg /requests
 ```
-
-## Requirements
-
-- macOS (uses IOKit framework)
 
 ## Release
 
 Tag a version to trigger the release workflow:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
-This builds universal macOS binaries (ARM + Intel), creates a GitHub release, and updates the Homebrew formula automatically.
+This builds binaries for all platforms, creates a GitHub release, and updates the Homebrew formula automatically.
 
 ## License
 

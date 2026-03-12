@@ -15,8 +15,20 @@ jobs:
         include:
           - target: aarch64-apple-darwin
             os: macos-latest
+            archive: tar.gz
           - target: x86_64-apple-darwin
             os: macos-latest
+            archive: tar.gz
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            archive: tar.gz
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            archive: tar.gz
+            cross: true
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            archive: zip
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -26,23 +38,43 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Build
+      - name: Install cross
+        if: matrix.cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Build (native)
+        if: ${{ !matrix.cross }}
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Package
+      - name: Build (cross)
+        if: matrix.cross
+        run: cross build --release --target ${{ matrix.target }}
+
+      - name: Package (unix)
+        if: matrix.archive == 'tar.gz'
         run: |
           cd target/${{ matrix.target }}/release
           tar czf ../../../cocaine-${{ matrix.target }}.tar.gz cocaine
           cd ../../..
           shasum -a 256 cocaine-${{ matrix.target }}.tar.gz > cocaine-${{ matrix.target }}.tar.gz.sha256
 
+      - name: Package (windows)
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "target/${{ matrix.target }}/release/cocaine.exe" -DestinationPath "cocaine-${{ matrix.target }}.zip"
+          $hash = (Get-FileHash "cocaine-${{ matrix.target }}.zip" -Algorithm SHA256).Hash.ToLower()
+          "$hash  cocaine-${{ matrix.target }}.zip" | Out-File -Encoding ascii "cocaine-${{ matrix.target }}.zip.sha256"
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: cocaine-${{ matrix.target }}
           path: |
-            cocaine-${{ matrix.target }}.tar.gz
-            cocaine-${{ matrix.target }}.tar.gz.sha256
+            cocaine-*.tar.gz
+            cocaine-*.tar.gz.sha256
+            cocaine-*.zip
+            cocaine-*.zip.sha256
 
   release:
     needs: build
@@ -61,7 +93,9 @@ jobs:
           generate_release_notes: true
           files: |
             cocaine-*.tar.gz
-            cocaine-*.sha256
+            cocaine-*.tar.gz.sha256
+            cocaine-*.zip
+            cocaine-*.zip.sha256
 
   homebrew:
     needs: release
