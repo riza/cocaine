@@ -1,9 +1,13 @@
+<p align="center">
+  <img src="assets/logo.png" width="200" alt="cocaine logo">
+</p>
 
+<h1 align="center">cocaine</h1>
 
-# cocaine
-
-Keep your machine awake. Like `caffeinate`, but with more kick.  
-A tiny Rust CLI that prevents your computer from sleeping. Works on macOS, Linux and Windows.
+<p align="center">
+  Keep your machine awake. Like <code>caffeinate</code>, but with more kick.<br>
+  A tiny Rust CLI that prevents your computer from sleeping. Works on macOS, Linux and Windows.
+</p>
 
 ## Install
 
