@@ -122,14 +122,14 @@ fn resolve_assertion_types(cli: &Cli) -> Vec<AssertionType> {
     if has_display {
         // Display isteniyorsa, display + system + idle'ı birleştir
         // (ES_DISPLAY_REQUIRED hepsini kapsar aslında)
-        types.push(AssertionType::PreventIdleDisplaySleep);
+        types.push(AssertionType::IdleDisplay);
     } else if has_system {
-        types.push(AssertionType::PreventSystemSleep);
+        types.push(AssertionType::System);
     } else if has_idle {
-        types.push(AssertionType::PreventIdleSystemSleep);
+        types.push(AssertionType::IdleSystem);
     } else {
         // Default: idle system sleep
-        types.push(AssertionType::PreventIdleSystemSleep);
+        types.push(AssertionType::IdleSystem);
     }
 
     types
@@ -200,10 +200,8 @@ fn run_until_stopped(cli: &Cli, _assertions: Vec<PowerAssertion>) {
     while running.load(Ordering::SeqCst) {
         std::thread::sleep(Duration::from_millis(250));
 
-        if let Some(t) = timeout {
-            if start.elapsed() >= t {
-                break;
-            }
+        if timeout.is_some_and(|t| start.elapsed() >= t) {
+            break;
         }
     }
 
@@ -413,10 +411,8 @@ fn run_daemon_worker(cli: &Cli) {
 
     while running.load(Ordering::SeqCst) {
         std::thread::sleep(Duration::from_millis(500));
-        if let Some(t) = timeout {
-            if start.elapsed() >= t {
-                break;
-            }
+        if timeout.is_some_and(|t| start.elapsed() >= t) {
+            break;
         }
     }
 

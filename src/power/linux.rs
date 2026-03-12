@@ -7,17 +7,17 @@ fn inhibit_what(types: &[AssertionType]) -> String {
     let mut what = Vec::new();
     for t in types {
         match t {
-            AssertionType::PreventIdleSystemSleep => {
+            AssertionType::IdleSystem => {
                 if !what.contains(&"idle") {
                     what.push("idle");
                 }
             }
-            AssertionType::PreventIdleDisplaySleep => {
+            AssertionType::IdleDisplay => {
                 if !what.contains(&"idle") {
                     what.push("idle");
                 }
             }
-            AssertionType::PreventSystemSleep => {
+            AssertionType::System => {
                 if !what.contains(&"sleep") {
                     what.push("sleep");
                 }

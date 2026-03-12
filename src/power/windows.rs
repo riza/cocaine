@@ -6,11 +6,11 @@ use windows_sys::Win32::System::Power::{
 
 fn execution_state_flags(assertion_type: AssertionType) -> EXECUTION_STATE {
     match assertion_type {
-        AssertionType::PreventIdleSystemSleep => ES_CONTINUOUS | ES_SYSTEM_REQUIRED,
-        AssertionType::PreventIdleDisplaySleep => {
+        AssertionType::IdleSystem => ES_CONTINUOUS | ES_SYSTEM_REQUIRED,
+        AssertionType::IdleDisplay => {
             ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED
         }
-        AssertionType::PreventSystemSleep => ES_CONTINUOUS | ES_SYSTEM_REQUIRED,
+        AssertionType::System => ES_CONTINUOUS | ES_SYSTEM_REQUIRED,
     }
 }
 

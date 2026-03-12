@@ -20,9 +20,9 @@ unsafe extern "C" {
 
 fn assertion_type_string(t: AssertionType) -> CFString {
     match t {
-        AssertionType::PreventIdleSystemSleep => CFString::new("PreventUserIdleSystemSleep"),
-        AssertionType::PreventIdleDisplaySleep => CFString::new("PreventUserIdleDisplaySleep"),
-        AssertionType::PreventSystemSleep => CFString::new("PreventSystemSleep"),
+        AssertionType::IdleSystem => CFString::new("PreventUserIdleSystemSleep"),
+        AssertionType::IdleDisplay => CFString::new("PreventUserIdleDisplaySleep"),
+        AssertionType::System => CFString::new("PreventSystemSleep"),
     }
 }
 

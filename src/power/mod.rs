@@ -9,17 +9,17 @@ use std::fmt;
 
 #[derive(Debug, Clone, Copy)]
 pub enum AssertionType {
-    PreventIdleSystemSleep,
-    PreventIdleDisplaySleep,
-    PreventSystemSleep,
+    IdleSystem,
+    IdleDisplay,
+    System,
 }
 
 impl fmt::Display for AssertionType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::PreventIdleSystemSleep => write!(f, "idle system sleep"),
-            Self::PreventIdleDisplaySleep => write!(f, "idle display sleep"),
-            Self::PreventSystemSleep => write!(f, "system sleep"),
+            Self::IdleSystem => write!(f, "idle system sleep"),
+            Self::IdleDisplay => write!(f, "idle display sleep"),
+            Self::System => write!(f, "system sleep"),
         }
     }
 }
