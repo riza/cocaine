@@ -19,7 +19,7 @@ ctrlc = "3"
 core-foundation = "0.10"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-zbus = { version = "5", default-features = false, features = ["blocking"] }
+zbus = { version = "5", features = ["blocking"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 windows-sys = { version = "0.59", features = ["Win32_System_Power"] }
