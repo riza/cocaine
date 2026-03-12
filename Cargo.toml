@@ -1,0 +1,17 @@
+[package]
+name = "cocaine"
+version = "0.1.0"
+edition = "2024"
+authors = ["Riza Sabuncu"]
+description = "Keep your Mac awake. Like caffeinate, but with more kick."
+license = "MIT"
+repository = "https://github.com/riza/cocaine"
+homepage = "https://github.com/riza/cocaine"
+readme = "README.md"
+keywords = ["macos", "caffeinate", "sleep", "power", "cli"]
+categories = ["command-line-utilities", "os::macos-apis"]
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+core-foundation = "0.10"
+ctrlc = "3"
