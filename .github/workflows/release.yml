@@ -101,22 +101,12 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     steps:
-      - name: Get tap default branch
-        id: tap-branch
-        run: |
-          BRANCH=$(gh api repos/riza/homebrew-tap --jq '.default_branch' 2>/dev/null || echo "master")
-          echo "name=$BRANCH" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-
       - name: Checkout tap
         uses: actions/checkout@v4
         with:
           repository: riza/homebrew-tap
-          ref: ${{ steps.tap-branch.outputs.name }}
           path: homebrew-tap
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          fetch-depth: 0
 
       - name: Update formula
         run: |
