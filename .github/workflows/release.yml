@@ -105,7 +105,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: riza/homebrew-tap
-          ref: master
+          ref: main
           path: homebrew-tap
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
 
