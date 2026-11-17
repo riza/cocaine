@@ -103,6 +103,10 @@ cocaine -d -- make build
 cocaine -s -- curl -O https://example.com/big-file.tar.gz
 ```
 
+### In Tern
+
+Run in a [Tern](https://stencil.so/tern) pane, `cocaine` (without a command to wrap) shows a live card instead of its status lines: what it prevents, how long it has kept the machine awake, the time left and a progress bar with `-t`, and how it ended once it stops. Tern ticks the timers itself. Set `TERN_TSP=0` to keep the plain lines.
+
 ## How it works
 
 cocaine uses native OS APIs on each platform to prevent sleep:

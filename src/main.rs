@@ -1,3 +1,4 @@
+mod native;
 mod power;
 
 use clap::{Parser, Subcommand};
@@ -99,11 +100,16 @@ fn main() {
         std::process::exit(1);
     }
 
-    print_status(&assertions);
-
     if !cli.command.is_empty() {
+        print_status(&assertions);
         run_with_command(&cli.command, assertions);
-    } else {
+        return;
+    }
+
+    // In Tern the card shows what the plain lines would say, live.
+    let timeout = (cli.timeout > 0).then(|| Duration::from_secs(cli.timeout));
+    if !native::run(timeout, &assertions) {
+        print_status(&assertions);
         run_until_stopped(&cli, assertions);
     }
 }
